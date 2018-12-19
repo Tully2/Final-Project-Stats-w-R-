@@ -3,6 +3,8 @@
 # DECEMBER 19, 2018
 # STATS W/ R - VEEN
 
+# NOTE: On PC collapse all with Alt+O and expand all with Alt+Shift+O
+
 ## VERSION AND LIBRARIES ## ----
 
 R.version.string
@@ -22,7 +24,7 @@ all.data.t[is.na(all.data.t)] <- 0
 # Check that it worked
 head(all.data.t)
 
-# Defining a response gradient ====
+## Defining a response gradient ## ====
 # Designate a vector for site names
 site.names <- c("TE","BR","ET","GT","TM","RM")
 
@@ -584,12 +586,13 @@ site.names <- c("TE","BR","ET","GT","TM","RM")
     
   
 ## MIXED MODELS ## ----
-
+  # Applying "glmer" from "lme4" library
   ?glmer
+  # NOTE: Inputs as factors
   mod.rich.elev.t <- glmer(as.factor(all.data.t$Richness) ~ as.factor(all.data.t$Elevation) + (1|as.factor(all.data.t$ï..Area)), family=binomial)
   summary(mod.rich.elev.t)
-  plot(mod.rich.elev.t)
   
+  # Create trimmed dataset to test 
   glmer.test.t <- data.frame(as.factor(all.data.t$ï..Area), as.factor(all.data.t$Richness), as.factor(all.data.t$Elevation), as.factor(all.data.t$Treatment))
   head(glmer.test.t)
   mod.test.t <- glmer(glmer.test.t$as.factor.all.data.t.Richness. ~ glmer.test.t$as.factor.all.data.t.Elevation. + (1|glmer.test.t$as.factor.all.data.t.ï..Area.), family=binomial)
@@ -597,10 +600,12 @@ site.names <- c("TE","BR","ET","GT","TM","RM")
   mod.test.2.t <- glmer(glmer.test.t$as.factor.all.data.t.Richness. ~ glmer.test.t$as.factor.all.data.t.Elevation. + glmer.test.t$as.factor.all.data.t.Elevation.*glmer.test.t$as.factor.all.data.t.Treatment. + (1|glmer.test.t$as.factor.all.data.t.ï..Area.), family=binomial)
   summary(mod.test.2.t)
   
+  # Test models on simulated data
   sim.mod.test <- glmer(as.factor(sim.data.no.c$sim.richness.4) ~ as.factor(sim.data.no.c$sim.elev) + (1|as.factor(sim.data.no.c$sim.loc)), family=binomial)
   summary(sim.mod.test)
   sim.mod.test.2 <- glmer(as.factor(sim.data.no.c$sim.richness.4) ~ as.factor(sim.data.no.c$sim.use) + (1|as.factor(sim.data.no.c$sim.loc)), family=binomial)
   summary(sim.mod.test.2)
+  # Add interaction ***ERROR RESULT***
   sim.mod.test.3 <- glmer(as.factor(sim.data.no.c$sim.richness.4) ~ as.factor(sim.data.no.c$sim.use)*as.factor(sim.data.no.c$sim.elev) + (1|as.factor(sim.data.no.c$sim.loc)), family=binomial)
   summary(sim.mod.test.3)
   
