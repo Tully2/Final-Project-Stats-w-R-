@@ -586,12 +586,32 @@ site.names <- c("TE","BR","ET","GT","TM","RM")
 ## MIXED MODELS ## ----
 
   ?glmer
-  mod.rich.elev.t <- glmer(all.data.t$Richness ~ all.data.t$Elevation + (1|all.data.t$ï..Area))
+  mod.rich.elev.t <- glmer(as.factor(all.data.t$Richness) ~ as.factor(all.data.t$Elevation) + (1|as.factor(all.data.t$ï..Area)), family=binomial)
   summary(mod.rich.elev.t)
-  plot()
+  plot(mod.rich.elev.t)
   
-  glmer.test.t <- data.frame(as.factor(all.data.t$ï..Area), as.factor(all.data.t$Richness), as.factor(all.data.t$Elevation))
+  glmer.test.t <- data.frame(as.factor(all.data.t$ï..Area), as.factor(all.data.t$Richness), as.factor(all.data.t$Elevation), as.factor(all.data.t$Treatment))
   head(glmer.test.t)
   mod.test.t <- glmer(glmer.test.t$as.factor.all.data.t.Richness. ~ glmer.test.t$as.factor.all.data.t.Elevation. + (1|glmer.test.t$as.factor.all.data.t.ï..Area.), family=binomial)
   summary(mod.test.t)
+  mod.test.2.t <- glmer(glmer.test.t$as.factor.all.data.t.Richness. ~ glmer.test.t$as.factor.all.data.t.Elevation. + glmer.test.t$as.factor.all.data.t.Elevation.*glmer.test.t$as.factor.all.data.t.Treatment. + (1|glmer.test.t$as.factor.all.data.t.ï..Area.), family=binomial)
+  summary(mod.test.2.t)
+  
+  sim.mod.test <- glmer(as.factor(sim.data.no.c$sim.richness.4) ~ as.factor(sim.data.no.c$sim.elev) + (1|as.factor(sim.data.no.c$sim.loc)), family=binomial)
+  summary(sim.mod.test)
+  sim.mod.test.2 <- glmer(as.factor(sim.data.no.c$sim.richness.4) ~ as.factor(sim.data.no.c$sim.use) + (1|as.factor(sim.data.no.c$sim.loc)), family=binomial)
+  summary(sim.mod.test.2)
+  sim.mod.test.3 <- glmer(as.factor(sim.data.no.c$sim.richness.4) ~ as.factor(sim.data.no.c$sim.use)*as.factor(sim.data.no.c$sim.elev) + (1|as.factor(sim.data.no.c$sim.loc)), family=binomial)
+  summary(sim.mod.test.3)
+  
+                        
+  ### ERROR ISSUES ###
+  # W/ INTERACIONS #
+        # Error in length(value <- as.numeric(value)) == 1L : 
+          # Downdated VtV is not positive definite
+  # OTHER ERROR #
+        #singular fit
+        # Warning message:
+          # In (function (fn, par, lower = rep.int(-Inf, n), upper = rep.int(Inf,  :
+                                                                             # failure to converge in 10000 evaluations
   
